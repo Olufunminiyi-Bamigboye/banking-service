@@ -11,9 +11,8 @@ import java.time.LocalDateTime;
 @Table(name = "transactions")
 public class Transaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private double balance;
     private double amount;
     private String transactionType;
     private String transactionRef;
@@ -29,21 +28,16 @@ public class Transaction {
   @JsonIgnore
   private User user;
 
-    public Transaction(double balance, double amount, String transactionType, LocalDateTime transactionDate, User user) {
-        this.balance = balance;
+    public Transaction(double amount, String transactionType, String transactionRef, LocalDateTime transactionDate, User user) {
         this.amount = amount;
         this.transactionType = transactionType;
-        this.transactionRef = "F" + 1000 + (int)(Math.random() * 69999);
+        this.transactionRef = transactionRef;
         this.transactionDate = transactionDate;
         this.user = user;
     }
 
     public Transaction(){
 
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
     }
 
     public double getAmount() {
@@ -84,23 +78,5 @@ public class Transaction {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public void deposit(double amount){
-        balance+=amount;
-        this.transactionType = "deposit";
-    }
-
-    public double getBalance(){
-        return balance;
-    }
-
-    public boolean withdraw(double amount){
-        if(amount < balance){
-            balance-=amount;
-            this.transactionType = "withdrawal";
-            return true;
-        }
-        return false;
     }
 }

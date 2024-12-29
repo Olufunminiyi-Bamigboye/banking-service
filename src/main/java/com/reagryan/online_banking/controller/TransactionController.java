@@ -13,8 +13,8 @@ public class TransactionController {
     @Autowired
     private TransactionServiceImpl transactionService;
 
-    @PatchMapping("transactions/{id}/deposit")
+    @PutMapping("transactions/{id}/deposits")
     public ResponseEntity<ApiResponse> depositCash(@PathVariable Long id, @RequestBody TransactionRequest request){
-        return ResponseEntity.ok().body(transactionService.depositCash(id, request));
+        return ResponseEntity.ok().body(transactionService.cashDeposit(id, request));
     }
 }

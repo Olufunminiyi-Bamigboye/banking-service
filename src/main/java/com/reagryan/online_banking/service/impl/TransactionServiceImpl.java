@@ -3,6 +3,7 @@ package com.reagryan.online_banking.service.impl;
 
 import com.reagryan.online_banking.dto.request.TransactionRequest;
 import com.reagryan.online_banking.dto.response.ApiResponse;
+import com.reagryan.online_banking.dto.response.TransactionResponse;
 import com.reagryan.online_banking.entity.Transaction;
 import com.reagryan.online_banking.entity.User;
 import com.reagryan.online_banking.repository.TransactionRepository;
@@ -28,24 +29,38 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     @Override
-    public ApiResponse depositCash(Long userId, TransactionRequest request) {
-            Optional<User> user = userRepository.findById(userId);
-            if (user.isPresent()) {
-                User fetchedUser = user.get();
+    public ApiResponse cashDeposit(Long userId, TransactionRequest request) {
+//            Optional<User> user = userRepository.findById(userId);
+//            if (user.isPresent()) {
+//                User fetchedUser = user.get();
                 if(request.getAmount() <= 0) {
                     throw new RuntimeException("Ooops! amount must be more than zero");
                 }
-                    Transaction userTransaction = new Transaction();
-                    userTransaction.deposit(request.getAmount());
-                    userTransaction.setAmount(request.getAmount());
-                    userTransaction.setBalance(request.getBalance());
-                    userTransaction.setTransactionType(request.getTransactionType());
-                    userTransaction.setTransactionRef(request.getTransactionRef());
-                    userTransaction.setTransactionDate(LocalDateTime.now());
-                    userTransaction.setUser(request.getUser());
-                    Transaction depositTransaction = transactionRepository.save(userTransaction);
-                    return new ApiResponse(false, "Your money has been deposited successfully", userTransaction);
-         }
-            throw new RuntimeException("Oops, user with ID " + userId + " not found");
+                return userRepository.findById(userId).map(user -> {
+                    Transaction depositTransaction = new Transaction();
+                    depositTransaction.setAmount(request.getAmount());
+                    depositTransaction.setTransactionDate(LocalDateTime.now());
+                    depositTransaction.setUser(user);
+                    depositTransaction.setTransactionType("deposit");
+                    depositTransaction.setTransactionRef(1000 + (int)(Math.random() * 9999) + "F");
+
+                    user.setBalance(user.getBalance() + request.getAmount());
+                    Transaction userTransaction = transactionRepository.save(depositTransaction);
+                    TransactionResponse response = convertTransactionToResponse(userTransaction);
+                    return new ApiResponse(false,
+                            " Your account has been successfully credited",
+                            response);
+                }).orElseThrow(() -> new RuntimeException("Oops, user with ID " + userId + " not found"));
+        }
+
+        public TransactionResponse convertTransactionToResponse(Transaction transaction) {
+            TransactionResponse transactionResponse = new TransactionResponse(
+                    transaction.getUser().getBalance(),
+                    transaction.getAmount(),
+                    transaction.getTransactionType(),
+                    transaction.getTransactionRef(),
+                    transaction.getTransactionDate()
+            );
+            return transactionResponse;
+        }
     }
-}

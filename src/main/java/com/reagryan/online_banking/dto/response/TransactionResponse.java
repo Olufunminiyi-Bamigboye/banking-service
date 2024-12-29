@@ -7,10 +7,8 @@ import java.time.LocalDateTime;
 
 public class TransactionResponse {
     private double balance;
-    @NotBlank
     private double amount;
     private String transactionType;
-    @Column(name = "Ref_Number")
     private String transactionRef;
     private LocalDateTime transactionDate;
 

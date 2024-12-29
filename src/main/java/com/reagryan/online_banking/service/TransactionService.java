@@ -4,5 +4,5 @@ import com.reagryan.online_banking.dto.request.TransactionRequest;
 import com.reagryan.online_banking.dto.response.ApiResponse;
 
 public interface TransactionService {
-    ApiResponse depositCash(Long userId, TransactionRequest request);
+    ApiResponse cashDeposit(Long userId, TransactionRequest request);
 }

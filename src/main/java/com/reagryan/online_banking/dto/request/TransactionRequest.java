@@ -16,6 +16,15 @@ public class TransactionRequest {
         this.amount = amount;
     }
 
+    public TransactionRequest(double balance, double amount, String transactionType, String transactionRef, LocalDateTime transactionDate, User user) {
+        this.balance = balance;
+        this.amount = amount;
+        this.transactionType = transactionType;
+        this.transactionRef = transactionRef;
+        this.transactionDate = transactionDate;
+        this.user = user;
+    }
+
     public TransactionRequest(){
 
     }
