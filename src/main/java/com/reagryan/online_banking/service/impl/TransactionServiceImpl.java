@@ -5,7 +5,6 @@ import com.reagryan.online_banking.dto.request.TransactionRequest;
 import com.reagryan.online_banking.dto.response.ApiResponse;
 import com.reagryan.online_banking.dto.response.TransactionResponse;
 import com.reagryan.online_banking.entity.Transaction;
-import com.reagryan.online_banking.entity.User;
 import com.reagryan.online_banking.repository.TransactionRepository;
 import com.reagryan.online_banking.repository.UserRepository;
 import com.reagryan.online_banking.service.TransactionService;
@@ -13,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -42,7 +38,7 @@ public class TransactionServiceImpl implements TransactionService {
                     depositTransaction.setTransactionDate(LocalDateTime.now());
                     depositTransaction.setUser(user);
                     depositTransaction.setTransactionType("deposit");
-                    depositTransaction.setTransactionRef(1000 + (int)(Math.random() * 9999) + "F");
+                    depositTransaction.setTransactionRef(1000 + (int)(Math.random() * 9999) + "D");
 
                     user.setBalance(user.getBalance() + request.getAmount());
                     Transaction userTransaction = transactionRepository.save(depositTransaction);
@@ -53,7 +49,8 @@ public class TransactionServiceImpl implements TransactionService {
                 }).orElseThrow(() -> new RuntimeException("Oops, user with ID " + userId + " not found"));
         }
 
-        public TransactionResponse convertTransactionToResponse(Transaction transaction) {
+
+    public TransactionResponse convertTransactionToResponse(Transaction transaction) {
             TransactionResponse transactionResponse = new TransactionResponse(
                     transaction.getUser().getBalance(),
                     transaction.getAmount(),
@@ -63,4 +60,28 @@ public class TransactionServiceImpl implements TransactionService {
             );
             return transactionResponse;
         }
+
+    @Override
+    public ApiResponse cashWithdrawal(Long userId, TransactionRequest request) {
+        if (request.getAmount() <= 0) {
+            throw new IllegalArgumentException("Invalid amount");
+        }
+            return userRepository.findById(userId).map(user1 -> {
+                if (user1.getBalance() < request.getAmount()) {
+                    throw new RuntimeException("Insufficient balance");
+                }
+                Transaction withdrawalTransaction = new Transaction();
+                withdrawalTransaction.setAmount(request.getAmount());
+                withdrawalTransaction.setTransactionDate(LocalDateTime.now());
+                withdrawalTransaction.setUser(user1);
+                withdrawalTransaction.setTransactionType("withdrawal");
+                withdrawalTransaction.setTransactionRef(1000 + (int) (Math.random() * 8999) + "W");
+
+                user1.setBalance(user1.getBalance() - request.getAmount());
+                Transaction userTransaction = transactionRepository.save(withdrawalTransaction);
+                TransactionResponse withdrawalResponse = convertTransactionToResponse(userTransaction);
+                return new ApiResponse(false, "Your account has been debited successfully", withdrawalResponse);
+            }).orElseThrow(() -> new RuntimeException("Oops, user with ID " + userId + " not found"));
     }
+
+}

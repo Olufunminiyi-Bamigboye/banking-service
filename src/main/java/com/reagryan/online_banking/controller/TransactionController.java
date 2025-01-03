@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/v1/")
 public class TransactionController {
@@ -16,5 +18,10 @@ public class TransactionController {
     @PutMapping("transactions/{id}/deposits")
     public ResponseEntity<ApiResponse> depositCash(@PathVariable Long id, @RequestBody TransactionRequest request){
         return ResponseEntity.ok().body(transactionService.cashDeposit(id, request));
+    }
+
+    @PutMapping("transactions/{id}/withdrawals")
+    public ResponseEntity<ApiResponse> withdrawCash(@PathVariable Long id, @RequestBody TransactionRequest request){
+        return ResponseEntity.ok().body(transactionService.cashWithdrawal(id, request));
     }
 }
