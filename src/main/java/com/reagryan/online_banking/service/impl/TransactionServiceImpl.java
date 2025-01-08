@@ -5,6 +5,9 @@ import com.reagryan.online_banking.dto.request.TransactionRequest;
 import com.reagryan.online_banking.dto.response.ApiResponse;
 import com.reagryan.online_banking.dto.response.TransactionResponse;
 import com.reagryan.online_banking.entity.Transaction;
+import com.reagryan.online_banking.exception.InsufficientAmountException;
+import com.reagryan.online_banking.exception.InvalidAmountException;
+import com.reagryan.online_banking.exception.CustomerNotFoundException;
 import com.reagryan.online_banking.repository.TransactionRepository;
 import com.reagryan.online_banking.repository.UserRepository;
 import com.reagryan.online_banking.service.TransactionService;
@@ -12,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -25,12 +27,12 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     @Override
-    public ApiResponse cashDeposit(Long userId, TransactionRequest request) {
+    public ApiResponse cashDeposit(Long userId, TransactionRequest request) throws CustomerNotFoundException, InvalidAmountException {
 //            Optional<User> user = userRepository.findById(userId);
 //            if (user.isPresent()) {
 //                User fetchedUser = user.get();
                 if(request.getAmount() <= 0) {
-                    throw new RuntimeException("Ooops! amount must be more than zero");
+                    throw new InvalidAmountException("Ooops! amount must be more than zero");
                 }
                 return userRepository.findById(userId).map(user -> {
                     Transaction depositTransaction = new Transaction();
@@ -46,7 +48,7 @@ public class TransactionServiceImpl implements TransactionService {
                     return new ApiResponse(false,
                             " Your account has been successfully credited",
                             response);
-                }).orElseThrow(() -> new RuntimeException("Oops, user with ID " + userId + " not found"));
+                }).orElseThrow(() -> new CustomerNotFoundException("Oops, user with ID " + userId + " not found"));
         }
 
 
@@ -62,13 +64,17 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
     @Override
-    public ApiResponse cashWithdrawal(Long userId, TransactionRequest request) {
+    public ApiResponse cashWithdrawal(Long userId, TransactionRequest request) throws CustomerNotFoundException, InvalidAmountException {
         if (request.getAmount() <= 0) {
-            throw new IllegalArgumentException("Invalid amount");
+            throw new InvalidAmountException("Invalid amount");
         }
             return userRepository.findById(userId).map(user1 -> {
                 if (user1.getBalance() < request.getAmount()) {
-                    throw new RuntimeException("Insufficient balance");
+                    try {
+                        throw new InsufficientAmountException("Insufficient balance");
+                    } catch (InsufficientAmountException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
                 Transaction withdrawalTransaction = new Transaction();
                 withdrawalTransaction.setAmount(request.getAmount());
@@ -81,7 +87,7 @@ public class TransactionServiceImpl implements TransactionService {
                 Transaction userTransaction = transactionRepository.save(withdrawalTransaction);
                 TransactionResponse withdrawalResponse = convertTransactionToResponse(userTransaction);
                 return new ApiResponse(false, "Your account has been debited successfully", withdrawalResponse);
-            }).orElseThrow(() -> new RuntimeException("Oops, user with ID " + userId + " not found"));
+            }).orElseThrow(() -> new CustomerNotFoundException("Oops, user with ID " + userId + " not found"));
     }
 
 }

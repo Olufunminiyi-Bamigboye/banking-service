@@ -45,6 +45,16 @@ public class User {
         this.balance = 0;
     }
 
+    public User(Long id, String firstName, String lastName, String phoneNo, String gender, String email, LocalDateTime createdAt) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNo = phoneNo;
+        this.gender = gender;
+        this.email = email;
+        this.createdAt = createdAt;
+    }
+
     public User() {
 
     }

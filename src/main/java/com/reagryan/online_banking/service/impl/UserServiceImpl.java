@@ -4,6 +4,7 @@ import com.reagryan.online_banking.dto.request.UserRequestDto;
 import com.reagryan.online_banking.dto.response.ApiResponse;
 import com.reagryan.online_banking.entity.User;
 import com.reagryan.online_banking.exception.InvalidUserException;
+import com.reagryan.online_banking.exception.CustomerNotFoundException;
 import com.reagryan.online_banking.repository.UserRepository;
 import com.reagryan.online_banking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +31,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApiResponse deleteUserById(Long userId) {
+    public ApiResponse deleteUserById(Long userId) throws CustomerNotFoundException {
         Optional<User> userToBeDeleted = userRepository.findById(userId);
         if(userToBeDeleted.isPresent()){
             User user = userToBeDeleted.get();
             userRepository.delete(user);
             return new ApiResponse(false,"User deleted successfully", null);
         }else{
-            throw new RuntimeException("User with ID " + userId + " not found");
+            throw new CustomerNotFoundException("User with ID " + userId + " not found");
         }
     }
 
