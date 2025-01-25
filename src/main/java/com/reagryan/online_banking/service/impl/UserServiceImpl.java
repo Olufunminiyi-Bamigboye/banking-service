@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
             userRequestDto.getFirstName().isEmpty() && userRequestDto.getLastName().isEmpty()){
             throw new InvalidUserException("Firstname and/or lastname cannot be empty or null");
         }
-        User user = new User(userRequestDto.getFirstName(), userRequestDto.getLastName(), userRequestDto.getPhoneNo(), userRequestDto.getGender(), userRequestDto.getEmail(), LocalDateTime.now());
+        User user = new User(userRequestDto.getFirstName(), userRequestDto.getLastName(), userRequestDto.getPhoneNo(), userRequestDto.getGender(), userRequestDto.getEmail(), userRequestDto.getAddress(), LocalDateTime.now());
         userRepository.save(user);
 
         ApiResponse apiResponse = new ApiResponse(false, "User created successfully", user);

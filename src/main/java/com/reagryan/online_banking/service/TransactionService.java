@@ -8,5 +8,5 @@ import com.reagryan.online_banking.exception.CustomerNotFoundException;
 public interface TransactionService {
     ApiResponse cashDeposit(Long userId, TransactionRequest request) throws CustomerNotFoundException, InvalidAmountException;
     ApiResponse cashWithdrawal(Long userId, TransactionRequest request) throws CustomerNotFoundException, InvalidAmountException;
-//    ApiResponse cashTransfer(Long userIdFrom, Long userIdTo, TransactionRequest request);
+    ApiResponse cashTransfer(Long senderAcct, Long recipient, TransactionRequest request) throws InvalidAmountException, CustomerNotFoundException;
 }

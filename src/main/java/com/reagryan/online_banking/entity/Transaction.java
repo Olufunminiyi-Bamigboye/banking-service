@@ -18,10 +18,6 @@ public class Transaction {
     private String transactionRef;
     private LocalDateTime transactionDate;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
-
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "user_id", nullable = false)
   @OnDelete(action = OnDeleteAction.CASCADE)

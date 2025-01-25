@@ -1,8 +1,6 @@
 package com.reagryan.online_banking.dto.request;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class UserRequestDto {
 
@@ -11,6 +9,7 @@ public class UserRequestDto {
     private String phoneNo;
     private String gender;
     private String email;
+    private String address;
     private LocalDateTime createdAt;
 
     public UserRequestDto(String firstName, String lastName, String phoneNo, String gender, String email) {
@@ -21,12 +20,13 @@ public class UserRequestDto {
         this.email = email;
     }
 
-    public UserRequestDto(String firstName, String lastName, String phoneNo, String gender, String email, LocalDateTime createdAt) {
+    public UserRequestDto(String firstName, String lastName, String phoneNo, String gender, String email, String address, LocalDateTime createdAt) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNo = phoneNo;
         this.gender = gender;
         this.email = email;
+        this.address = address;
         this.createdAt = createdAt;
     }
 
@@ -72,6 +72,13 @@ public class UserRequestDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public LocalDateTime getCreatedAt() {

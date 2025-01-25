@@ -24,4 +24,9 @@ public class TransactionController {
     public ResponseEntity<ApiResponse> withdrawCash(@PathVariable Long id, @RequestBody TransactionRequest request) throws CustomerNotFoundException, InvalidAmountException {
         return ResponseEntity.ok().body(transactionService.cashWithdrawal(id, request));
     }
+
+    @PostMapping("transactions/{senderId}/{recipientId}/transfers")
+    public ResponseEntity<ApiResponse> transferCash(@PathVariable Long senderId, @PathVariable Long recipientId, @RequestBody TransactionRequest request) throws InvalidAmountException, CustomerNotFoundException {
+        return ResponseEntity.ok().body(transactionService.cashTransfer(senderId, recipientId, request));
+    }
 }

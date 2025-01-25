@@ -25,6 +25,7 @@ public class User {
     private String gender;
     @Column(unique = true)
     private String email;
+    private String address;
 
     private LocalDateTime createdAt;
     private String acctType;
@@ -33,12 +34,13 @@ public class User {
 
 
 
-    public User(String firstName, String lastName, String phoneNo, String gender, String email, LocalDateTime createdAt) {
+    public User(String firstName, String lastName, String phoneNo, String gender, String email, String address, LocalDateTime createdAt) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNo = phoneNo;
         this.gender = gender;
         this.email = email;
+        this.address = address;
         this.createdAt = createdAt;
         this.acctType = "Savings";
         this.acctNo = 1000 + (int)(Math.random() * 89999987);
@@ -99,6 +101,14 @@ public class User {
         this.email = email;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public double getBalance() {
         return balance;
     }
@@ -107,19 +117,26 @@ public class User {
         this.balance = balance;
     }
 
+    public int getAcctNo() {
+        return acctNo;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return acctNo == user.acctNo && Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phoneNo, user.phoneNo) && gender == user.gender && Objects.equals(email, user.email) && Objects.equals(createdAt, user.createdAt) && Objects.equals(acctType, user.acctType);
+        return acctNo == user.acctNo && Double.compare(balance, user.balance) == 0 && Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phoneNo, user.phoneNo) && Objects.equals(gender, user.gender) && Objects.equals(email, user.email) && Objects.equals(address, user.address) && Objects.equals(createdAt, user.createdAt) && Objects.equals(acctType, user.acctType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, phoneNo, gender, email, createdAt, acctType, acctNo, balance);
+        return Objects.hash(id, firstName, lastName, phoneNo, gender, email, address, createdAt, acctType, acctNo, balance);
     }
-    
+
     @Override
     public String toString() {
         return "User{" +
@@ -127,8 +144,9 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phoneNo='" + phoneNo + '\'' +
-                ", gender=" + gender +
+                ", gender='" + gender + '\'' +
                 ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
                 ", createdAt=" + createdAt +
                 ", acctType='" + acctType + '\'' +
                 ", acctNo=" + acctNo +
