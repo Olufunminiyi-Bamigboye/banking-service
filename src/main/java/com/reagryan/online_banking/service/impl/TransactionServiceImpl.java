@@ -14,9 +14,16 @@ import com.reagryan.online_banking.repository.UserRepository;
 import com.reagryan.online_banking.service.TransactionService;
 import com.reagryan.online_banking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,10 +47,12 @@ public class TransactionServiceImpl implements TransactionService {
                     response);
     }
 
+
     @Override
     public ApiResponse cashWithdrawal(Long userId, TransactionRequest request) throws CustomerNotFoundException, InvalidAmountException {
         return new ApiResponse(false, "Your account has been debited successfully", convertTransactionToResponse(withdrawal(userId, request)));
     }
+
 
     @Override
     public ApiResponse cashTransfer(Long senderAcct, Long recipient, TransactionRequest request) throws InvalidAmountException, CustomerNotFoundException {
@@ -54,6 +63,43 @@ public class TransactionServiceImpl implements TransactionService {
                 " Your have successfully transferred " + senderResponse.getAmount() + " to " + recipient,
                 convertTransactionToResponse(senderResponse));
     }
+
+//
+//    @Override
+//    public ApiResponse<List<TransactionResponse>> fetchDepositTransactionsByUserId(Long userId) throws CustomerNotFoundException {
+//        if (userId != null) {
+//            Optional<Transaction> transactions = transactionRepository.findById(userId);
+//            if (transactions.isPresent()) {
+//                Transaction transactionHistory = transactions.get();
+//                if (transactionHistory.getTransactionType().equals("Money-in")) {
+//                  Transaction depositTransactionHistory = (Transaction) transactionRepository.findAll();
+//                  List<TransactionResponse> transactionResponses = (List<TransactionResponse>) convertTransactionToResponse(depositTransactionHistory);
+//                    return new ApiResponse(false, "Deposit history generated successfully", transactionResponses);
+//                }
+//            }
+//        }
+//        throw new CustomerNotFoundException("Oops, user with ID " + userId + " not found");
+//    }
+
+
+    @Override
+    public ApiResponse<List<TransactionResponse>> fetchWithdrawalTransactionsByUserId(Long userId) {
+        return null;
+    }
+
+
+    @Override
+    public ApiResponse<Page<List<TransactionResponse>>> fetchAllTransactions(int page, int size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Transaction> transactionPage = transactionRepository.findAll(pageable);
+        return new ApiResponse(false, "All transactions fetched successfully", transactionPage);
+    }
+
 
     public Transaction deposit(Long userId, TransactionRequest request) throws CustomerNotFoundException, InvalidAmountException {
         if (request.getAmount() <= 0) {
@@ -72,6 +118,7 @@ public class TransactionServiceImpl implements TransactionService {
             return userTransaction;
         }).orElseThrow(() -> new CustomerNotFoundException("Oops, user with ID " + userId + " not found"));
     }
+
 
     public Transaction withdrawal(Long userId, TransactionRequest request) throws CustomerNotFoundException, InvalidAmountException {
         if (request.getAmount() <= 0) {
@@ -97,6 +144,7 @@ public class TransactionServiceImpl implements TransactionService {
             return userTransaction;
         }).orElseThrow(() -> new CustomerNotFoundException("Oops, user with ID " + userId + " not found"));
     }
+
 
     public TransactionResponse convertTransactionToResponse(Transaction transaction) {
         TransactionResponse transactionResponse = new TransactionResponse(

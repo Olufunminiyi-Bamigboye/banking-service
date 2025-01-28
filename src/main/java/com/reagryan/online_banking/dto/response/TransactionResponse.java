@@ -1,5 +1,6 @@
 package com.reagryan.online_banking.dto.response;
 
+import com.reagryan.online_banking.entity.User;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 
