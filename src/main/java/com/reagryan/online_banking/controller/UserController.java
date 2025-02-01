@@ -4,7 +4,7 @@ import com.reagryan.online_banking.dto.request.UserRequestDto;
 import com.reagryan.online_banking.dto.response.ApiResponse;
 import com.reagryan.online_banking.exception.InvalidUserException;
 import com.reagryan.online_banking.exception.CustomerNotFoundException;
-import com.reagryan.online_banking.service.BankCardService;
+import com.reagryan.online_banking.service.CardService;
 import com.reagryan.online_banking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private BankCardService newBankCardService;
+    private CardService newBankCardService;
 
     @PostMapping("users")
     public ResponseEntity<ApiResponse> addUser(@Validated @RequestBody UserRequestDto userRequestDto) throws InvalidUserException {

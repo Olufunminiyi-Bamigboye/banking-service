@@ -28,14 +28,17 @@ public class Card {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private User user;
+    private boolean notified = false;
 
-    public Card(String cardNumber, int cvv, String cardType, Date expiresAt, LocalDateTime createdAt, User user) {
+
+    public Card(String cardNumber, int cvv, String cardType, Date expiresAt, LocalDateTime createdAt, User user, boolean notified) {
         this.cardNumber = cardNumber;
         this.cvv = cvv;
         this.cardType = cardType;
         this.expiresAt = expiresAt;
         this.createdAt = createdAt;
         this.user = user;
+        this.notified = notified;
     }
 
     public Card() {
@@ -88,6 +91,14 @@ public class Card {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public boolean isNotified() {
+        return notified;
+    }
+
+    public void setNotified(boolean notified) {
+        this.notified = notified;
     }
 
     @Override

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -64,27 +65,12 @@ public class TransactionServiceImpl implements TransactionService {
                 convertTransactionToResponse(senderResponse));
     }
 
-//
-//    @Override
-//    public ApiResponse<List<TransactionResponse>> fetchDepositTransactionsByUserId(Long userId) throws CustomerNotFoundException {
-//        if (userId != null) {
-//            Optional<Transaction> transactions = transactionRepository.findById(userId);
-//            if (transactions.isPresent()) {
-//                Transaction transactionHistory = transactions.get();
-//                if (transactionHistory.getTransactionType().equals("Money-in")) {
-//                  Transaction depositTransactionHistory = (Transaction) transactionRepository.findAll();
-//                  List<TransactionResponse> transactionResponses = (List<TransactionResponse>) convertTransactionToResponse(depositTransactionHistory);
-//                    return new ApiResponse(false, "Deposit history generated successfully", transactionResponses);
-//                }
-//            }
-//        }
-//        throw new CustomerNotFoundException("Oops, user with ID " + userId + " not found");
-//    }
-
-
     @Override
-    public ApiResponse<List<TransactionResponse>> fetchWithdrawalTransactionsByUserId(Long userId) {
-        return null;
+    public ApiResponse depositTransactionsByUser(Long userId, String transactionType) throws CustomerNotFoundException {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomerNotFoundException("User not found"));
+        List<Transaction> fetchUserDepositTransactions = transactionRepository.findByUserAndTransactionType(user, transactionType);
+
+        return new ApiResponse(false, "Deposit transactions fetched successfully",fetchUserDepositTransactions);
     }
 
 

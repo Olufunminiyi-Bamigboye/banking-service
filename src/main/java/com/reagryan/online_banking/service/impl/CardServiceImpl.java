@@ -1,15 +1,15 @@
 package com.reagryan.online_banking.service.impl;
 
-import com.reagryan.online_banking.dto.request.BankCardRequest;
+import com.reagryan.online_banking.dto.request.CardRequest;
 import com.reagryan.online_banking.dto.response.ApiResponse;
 import com.reagryan.online_banking.dto.response.CardDto;
-import com.reagryan.online_banking.dto.response.BankCardResponse;
+import com.reagryan.online_banking.dto.response.CardResponse;
 import com.reagryan.online_banking.entity.Card;
 import com.reagryan.online_banking.entity.User;
 import com.reagryan.online_banking.exception.CustomerNotFoundException;
 import com.reagryan.online_banking.repository.CardRepository;
 import com.reagryan.online_banking.repository.UserRepository;
-import com.reagryan.online_banking.service.BankCardService;
+import com.reagryan.online_banking.service.CardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +25,7 @@ import java.time.LocalTime;
 
 @Service
 @Slf4j
-public class BankCardServiceImpl implements BankCardService {
+public class CardServiceImpl implements CardService {
     @Autowired
     private UserRepository userRepository;
 
@@ -49,13 +49,13 @@ public class BankCardServiceImpl implements BankCardService {
             throw new IllegalArgumentException("You cannot request more than 2 new bank cards");
         }
 
-        BankCardRequest bankCardRequest = mapUserToBankCardRequest(user);
+        CardRequest bankCardRequest = mapUserToBankCardRequest(user);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
 
-        HttpEntity<BankCardRequest> request = new HttpEntity<>(bankCardRequest, headers);
-        ResponseEntity<BankCardResponse> response = restTemplate.exchange(newBankCardUrl, HttpMethod.POST, request, BankCardResponse.class);
+        HttpEntity<CardRequest> request = new HttpEntity<>(bankCardRequest, headers);
+        ResponseEntity<CardResponse> response = restTemplate.exchange(newBankCardUrl, HttpMethod.POST, request, CardResponse.class);
 
         System.out.println("API Response: " + response.getBody());
 
@@ -74,13 +74,14 @@ public class BankCardServiceImpl implements BankCardService {
                 cardDto.getCardType(),
                 cardDto.getExpiresAt(),
                 LocalDateTime.now(),
-                user
+                user,
+                false
         );
         return generatedCard;
     }
 
-    private BankCardRequest mapUserToBankCardRequest(User user) {
-        BankCardRequest bankCardRequest = new BankCardRequest(
+    private CardRequest mapUserToBankCardRequest(User user) {
+        CardRequest bankCardRequest = new CardRequest(
                 user.getFirstName(),
                 user.getLastName(),
                 user.getAcctNo(),

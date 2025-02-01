@@ -3,18 +3,18 @@ package com.reagryan.online_banking.dto.response;
 
 import java.util.Objects;
 
-public class BankCardResponse {
+public class CardResponse {
     private boolean error;
     private String message;
     private Data data;
 
-    public BankCardResponse(boolean error, String message, Data data) {
+    public CardResponse(boolean error, String message, Data data) {
         this.error = error;
         this.message = message;
         this.data = data;
     }
 
-    public BankCardResponse() {
+    public CardResponse() {
     }
 
     public boolean isError() {
@@ -44,7 +44,7 @@ public class BankCardResponse {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        BankCardResponse that = (BankCardResponse) o;
+        CardResponse that = (CardResponse) o;
         return error == that.error && Objects.equals(message, that.message) && Objects.equals(data, that.data);
     }
 

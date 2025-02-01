@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 
-public class BankCardRequest {
+public class CardRequest {
     private String firstName;
     private String lastName;
     private int acctNo;
@@ -14,7 +14,7 @@ public class BankCardRequest {
     private LocalDateTime createdAt;
 
 
-    public BankCardRequest(String firstName, String lastName, int acctNo, String email, String address, LocalDateTime createdAt) {
+    public CardRequest(String firstName, String lastName, int acctNo, String email, String address, LocalDateTime createdAt) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.acctNo = acctNo;
@@ -23,7 +23,7 @@ public class BankCardRequest {
         this.createdAt = createdAt;
     }
 
-    public BankCardRequest() {
+    public CardRequest() {
     }
 
 
@@ -78,7 +78,7 @@ public class BankCardRequest {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        BankCardRequest that = (BankCardRequest) o;
+        CardRequest that = (CardRequest) o;
         return acctNo == that.acctNo && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(email, that.email) && Objects.equals(address, that.address) && Objects.equals(createdAt, that.createdAt);
     }
 
