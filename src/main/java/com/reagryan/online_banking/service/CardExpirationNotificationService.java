@@ -23,11 +23,11 @@ public class CardExpirationNotificationService {
     @Autowired
     private NotificationService notificationService;
 
-    @Scheduled(cron = "0 31 0 * * ?") // Runs daily at 6 PM
+    @Scheduled(cron = "0 31 0 * * ?") // e.g Runs daily at 12am
     public void notifyUsersAboutExpiringCards(){
         LocalDateTime startDate = LocalDateTime.now();
         LocalDateTime endDate = LocalDateTime.now().plusDays(30).with(LocalTime.MAX); // END OF THE DAY  23:59
-        log.info("endTime : " + endDate);
+        log.info("endTime : " + endDate);  //log to check info from the debugger
         List<Card> expiringCards = cardRepository.findExpiringCards(startDate, endDate);
         log.info("expiringCards : " + expiringCards);
 

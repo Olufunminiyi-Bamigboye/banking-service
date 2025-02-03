@@ -12,5 +12,8 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
     @Query("SELECT t FROM Transaction t WHERE t.user = :user and t.transactionType = :transactionType")
-    List<Transaction> findByUserAndTransactionType(User user, String transactionType);
+    List<Transaction> findByUserAndDepositTransactionType(User user, String transactionType);
+
+    @Query("SELECT t FROM Transaction t WHERE t.user = :user and t.transactionType = :transactionType")
+    List<Transaction> findByUserAndTransferTransactionType(User user, String transactionType);
 }

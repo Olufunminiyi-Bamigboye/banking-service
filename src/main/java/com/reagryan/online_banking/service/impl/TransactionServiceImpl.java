@@ -68,9 +68,17 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public ApiResponse depositTransactionsByUser(Long userId, String transactionType) throws CustomerNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomerNotFoundException("User not found"));
-        List<Transaction> fetchUserDepositTransactions = transactionRepository.findByUserAndTransactionType(user, transactionType);
+        List<Transaction> fetchUserDepositTransactions = transactionRepository.findByUserAndDepositTransactionType(user, transactionType);
 
         return new ApiResponse(false, "Deposit transactions fetched successfully",fetchUserDepositTransactions);
+    }
+
+    @Override
+    public ApiResponse transferTransactionsByUser(Long userId, String transactionType) throws CustomerNotFoundException {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomerNotFoundException("User not found"));
+        List<Transaction> fetchUserTransferTransactions = transactionRepository.findByUserAndTransferTransactionType(user, transactionType);
+
+        return new ApiResponse(false, "Transfer transactions fetched successfully", fetchUserTransferTransactions);
     }
 
 
