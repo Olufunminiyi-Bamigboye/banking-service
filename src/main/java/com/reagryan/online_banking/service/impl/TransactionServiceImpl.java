@@ -14,6 +14,7 @@ import com.reagryan.online_banking.repository.UserRepository;
 import com.reagryan.online_banking.service.TransactionService;
 import com.reagryan.online_banking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -66,7 +67,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public ApiResponse depositTransactionsByUser(Long userId, String transactionType) throws CustomerNotFoundException {
+    public ApiResponse fetchAllDepositTransactionsByUser(Long userId, String transactionType) throws CustomerNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomerNotFoundException("User not found"));
         List<Transaction> fetchUserDepositTransactions = transactionRepository.findByUserAndDepositTransactionType(user, transactionType);
 
@@ -74,7 +75,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public ApiResponse transferTransactionsByUser(Long userId, String transactionType) throws CustomerNotFoundException {
+    public ApiResponse fetchAllTransferTransactionsByUser(Long userId, String transactionType) throws CustomerNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomerNotFoundException("User not found"));
         List<Transaction> fetchUserTransferTransactions = transactionRepository.findByUserAndTransferTransactionType(user, transactionType);
 
@@ -83,6 +84,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     @Override
+    @Cacheable(value = "transactionsCache", key = "'page:' + #page + ',size:' + #size + ',sortBy:' + #sortBy + ',direction:' + #direction")
     public ApiResponse<Page<List<TransactionResponse>>> fetchAllTransactions(int page, int size, String sortBy, String direction) {
         Sort sort = direction.equalsIgnoreCase(Sort.Direction.ASC.name())
                 ? Sort.by(sortBy).ascending()

@@ -13,7 +13,7 @@ public interface TransactionService {
     ApiResponse cashDeposit(Long userId, TransactionRequest request) throws CustomerNotFoundException, InvalidAmountException;
     ApiResponse cashWithdrawal(Long userId, TransactionRequest request) throws CustomerNotFoundException, InvalidAmountException;
     ApiResponse cashTransfer(Long senderAcct, Long recipient, TransactionRequest request) throws InvalidAmountException, CustomerNotFoundException;
-    ApiResponse depositTransactionsByUser(Long userId, String transactionType) throws CustomerNotFoundException;
-    ApiResponse transferTransactionsByUser(Long userId, String transactionType) throws CustomerNotFoundException;
+    ApiResponse fetchAllDepositTransactionsByUser(Long userId, String transactionType) throws CustomerNotFoundException;
+    ApiResponse fetchAllTransferTransactionsByUser(Long userId, String transactionType) throws CustomerNotFoundException;
     ApiResponse <Page<List<TransactionResponse>>> fetchAllTransactions(int page, int size, String sortBy, String direction);
 }

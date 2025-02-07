@@ -1,6 +1,5 @@
 package com.reagryan.online_banking.service.impl;
 
-import com.reagryan.online_banking.dto.request.EmailRequest;
 import com.reagryan.online_banking.dto.request.UserRequestDto;
 import com.reagryan.online_banking.dto.response.ApiResponse;
 import com.reagryan.online_banking.entity.User;
@@ -8,9 +7,7 @@ import com.reagryan.online_banking.exception.InvalidUserException;
 import com.reagryan.online_banking.exception.CustomerNotFoundException;
 import com.reagryan.online_banking.repository.UserRepository;
 import com.reagryan.online_banking.service.UserService;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
