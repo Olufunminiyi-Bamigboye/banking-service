@@ -34,15 +34,15 @@ public class TransactionController {
         return ResponseEntity.ok().body(transactionService.cashTransfer(senderId, recipientId, request));
     }
 
-    @GetMapping("transactions/{userId}/deposits/history")
-    public ResponseEntity<ApiResponse> depositHistory(@PathVariable Long userId, @RequestParam String transactionType) throws CustomerNotFoundException {
-        return ResponseEntity.ok().body(transactionService.depositTransactionsByUser(userId, transactionType));
-    }
-
-    @GetMapping("transactions/{userId}/transfers/history")
-    public ResponseEntity<ApiResponse> transferHistory(@PathVariable Long userId, @RequestParam String transactionType) throws CustomerNotFoundException {
-        return ResponseEntity.ok().body(transactionService.transferTransactionsByUser(userId, transactionType));
-    }
+//    @GetMapping("transactions/{userId}/deposits/history")
+//    public ResponseEntity<ApiResponse> depositHistory(@PathVariable Long userId, @RequestParam String transactionType) throws CustomerNotFoundException {
+//        return ResponseEntity.ok().body(transactionService.depositTransactionsByUser(userId, transactionType));
+//    }
+//
+//    @GetMapping("transactions/{userId}/transfers/history")
+//    public ResponseEntity<ApiResponse> transferHistory(@PathVariable Long userId, @RequestParam String transactionType) throws CustomerNotFoundException {
+//        return ResponseEntity.ok().body(transactionService.transferTransactionsByUser(userId, transactionType));
+//    }
 
     @GetMapping ("transactions")
     public ResponseEntity<ApiResponse<Page<List<TransactionResponse>>>> getAllTransactions(

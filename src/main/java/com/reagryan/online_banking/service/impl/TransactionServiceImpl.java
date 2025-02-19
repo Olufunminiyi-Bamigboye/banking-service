@@ -67,6 +67,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Cacheable(value = "depositTransactions", key = "'userId:' + #userId + 'transactionType:' + #transactionType")
     public ApiResponse fetchAllDepositTransactionsByUser(Long userId, String transactionType) throws CustomerNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomerNotFoundException("User not found"));
         List<Transaction> fetchUserDepositTransactions = transactionRepository.findByUserAndDepositTransactionType(user, transactionType);
@@ -75,6 +76,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Cacheable(value = "transferTransactions", key = "'userId:' + #userId + 'transactionType:' + #transactionType")
     public ApiResponse fetchAllTransferTransactionsByUser(Long userId, String transactionType) throws CustomerNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomerNotFoundException("User not found"));
         List<Transaction> fetchUserTransferTransactions = transactionRepository.findByUserAndTransferTransactionType(user, transactionType);

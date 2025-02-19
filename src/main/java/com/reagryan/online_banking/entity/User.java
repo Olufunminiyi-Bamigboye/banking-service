@@ -1,5 +1,6 @@
 package com.reagryan.online_banking.entity;
 
+import com.reagryan.online_banking.dto.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -25,6 +26,9 @@ public class User {
     private String gender;
     @Column(unique = true)
     private String email;
+    private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.CUSTOMER;
     private String address;
 
     private LocalDateTime createdAt;
@@ -34,12 +38,13 @@ public class User {
 
 
 
-    public User(String firstName, String lastName, String phoneNo, String gender, String email, String address, LocalDateTime createdAt) {
+    public User(String firstName, String lastName, String phoneNo, String gender, String email, String password, String address, LocalDateTime createdAt) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNo = phoneNo;
         this.gender = gender;
         this.email = email;
+        this.password = password;
         this.address = address;
         this.createdAt = createdAt;
         this.acctType = "Savings";
@@ -59,6 +64,18 @@ public class User {
 
     public User() {
 
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getFirstName() {
