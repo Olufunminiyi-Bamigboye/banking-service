@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
             loginResponse.setToken(token);
             loginResponse.setRole(role.get());
 
-            return new ApiResponse(true, "User logged in successfully", loginResponse);
+            return new ApiResponse(false, "User logged in successfully", loginResponse);
 
 
         } catch (AuthenticationException e) {

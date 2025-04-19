@@ -1,6 +1,6 @@
 package com.reagryan.online_banking.dto.request;
 
-import com.reagryan.online_banking.dto.Role;
+import com.reagryan.online_banking.entity.Role;
 
 import java.time.LocalDateTime;
 

@@ -26,7 +26,7 @@ public class UserController {
         return ResponseEntity.ok().body(userService.createUser(userRequestDto));
     }
 
-    @PostMapping("/auth/login")
+    @PostMapping("auth/login")
     public ResponseEntity<ApiResponse> loginUser(@RequestBody LoginRequest loginRequest)  {
         return ResponseEntity.ok().body(userService.loginRequest(loginRequest));
     }

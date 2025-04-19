@@ -22,11 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -44,6 +40,13 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public ApiResponse cashDeposit(Long userId, TransactionRequest request) throws CustomerNotFoundException, InvalidAmountException {
         TransactionResponse response = convertTransactionToResponse(deposit(userId, request));
+
+        Runnable depositTask = () -> {
+            for (int i = 0; i < 1000; i++) {
+                request.setAmount(i * request.getAmount());
+            }
+        };
+
             return new ApiResponse(false,
                     " Your account has been successfully credited",
                     response);

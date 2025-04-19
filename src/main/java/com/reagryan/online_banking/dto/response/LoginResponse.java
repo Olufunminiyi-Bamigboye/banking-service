@@ -11,6 +11,36 @@ public class LoginResponse {
     private String token;
     private String role;
 
+    public LoginResponse() {}
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

@@ -1,7 +1,6 @@
 package com.reagryan.online_banking.service;
 
 
-import com.reagryan.online_banking.dto.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

@@ -1,8 +1,6 @@
 package com.reagryan.online_banking.entity;
 
-import com.reagryan.online_banking.dto.Role;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
