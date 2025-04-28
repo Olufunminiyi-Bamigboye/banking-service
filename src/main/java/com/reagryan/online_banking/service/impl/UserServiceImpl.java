@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Scanner;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -48,6 +49,7 @@ public class UserServiceImpl implements UserService {
                 userRequestDto.getFirstName().isEmpty() && userRequestDto.getLastName().isEmpty()) {
             throw new InvalidUserException("Firstname and/or lastname cannot be empty or null");
         }
+
         User user = new User(userRequestDto.getFirstName(),
                 userRequestDto.getLastName(),
                 userRequestDto.getPhoneNo(),

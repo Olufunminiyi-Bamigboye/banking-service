@@ -1,7 +1,6 @@
 package com.reagryan.online_banking.security;
 
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,12 +32,16 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
         jsr250Enabled = true,
         prePostEnabled = true
 )
-@RequiredArgsConstructor
 public class WebSecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
 
     private final JwtAuthenticationEntryPoint unauthorizedHandler;
+
+    public WebSecurityConfig(CustomUserDetailsService customUserDetailsService, JwtAuthenticationEntryPoint unauthorizedHandler) {
+        this.customUserDetailsService = customUserDetailsService;
+        this.unauthorizedHandler = unauthorizedHandler;
+    }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {

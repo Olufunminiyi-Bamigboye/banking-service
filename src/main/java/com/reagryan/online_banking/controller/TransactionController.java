@@ -9,6 +9,8 @@ import com.reagryan.online_banking.service.impl.TransactionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,11 +21,13 @@ public class TransactionController {
     @Autowired
     private TransactionServiceImpl transactionService;
 
+    @PostAuthorize("hasRole('CUSTOMER')")
     @PutMapping("transactions/{id}/deposits")
     public ResponseEntity<ApiResponse> depositCash(@PathVariable Long id, @RequestBody TransactionRequest request) throws CustomerNotFoundException, InvalidAmountException {
         return ResponseEntity.ok().body(transactionService.cashDeposit(id, request));
     }
 
+    @PreAuthorize("hasRole('CUSTOMER')")
     @PutMapping("transactions/{id}/withdrawals")
     public ResponseEntity<ApiResponse> withdrawCash(@PathVariable Long id, @RequestBody TransactionRequest request) throws CustomerNotFoundException, InvalidAmountException {
         return ResponseEntity.ok().body(transactionService.cashWithdrawal(id, request));
@@ -44,6 +48,7 @@ public class TransactionController {
 //        return ResponseEntity.ok().body(transactionService.transferTransactionsByUser(userId, transactionType));
 //    }
 
+    @PreAuthorize("hasAuthority('STAFF')")
     @GetMapping ("transactions")
     public ResponseEntity<ApiResponse<Page<List<TransactionResponse>>>> getAllTransactions(
             @RequestParam(defaultValue = "0") int page,

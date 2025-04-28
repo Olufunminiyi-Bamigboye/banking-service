@@ -1,6 +1,8 @@
 package com.reagryan.online_banking.service.impl;
 
 
+import com.reagryan.online_banking.dto.request.AuditLogRequest;
+import com.reagryan.online_banking.dto.request.MetaDataRequest;
 import com.reagryan.online_banking.dto.request.TransactionRequest;
 import com.reagryan.online_banking.dto.response.ApiResponse;
 import com.reagryan.online_banking.dto.response.TransactionResponse;
@@ -11,6 +13,7 @@ import com.reagryan.online_banking.exception.InvalidAmountException;
 import com.reagryan.online_banking.exception.CustomerNotFoundException;
 import com.reagryan.online_banking.repository.TransactionRepository;
 import com.reagryan.online_banking.repository.UserRepository;
+import com.reagryan.online_banking.service.AuditLogService;
 import com.reagryan.online_banking.service.TransactionService;
 import com.reagryan.online_banking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,25 +30,36 @@ import java.util.List;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-    @Autowired
-    private TransactionRepository transactionRepository;
+    private final TransactionRepository transactionRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
+    private final AuditLogService auditLogService;
+
+    public TransactionServiceImpl(TransactionRepository transactionRepository, UserRepository userRepository, UserService userService, AuditLogService auditLogService) {
+        this.transactionRepository = transactionRepository;
+        this.userRepository = userRepository;
+        this.userService = userService;
+        this.auditLogService = auditLogService;
+    }
 
     @Override
     public ApiResponse cashDeposit(Long userId, TransactionRequest request) throws CustomerNotFoundException, InvalidAmountException {
         TransactionResponse response = convertTransactionToResponse(deposit(userId, request));
 
-        Runnable depositTask = () -> {
-            for (int i = 0; i < 1000; i++) {
-                request.setAmount(i * request.getAmount());
-            }
-        };
+        MetaDataRequest requestMetaData = new MetaDataRequest();
+        requestMetaData.setIp("193.186.4.64");
+        requestMetaData.setDevice("HP Laptop");
+        requestMetaData.setLocation("Aylesbury");
+
+        AuditLogRequest auditLogRequest = new AuditLogRequest();
+        auditLogRequest.setUserId(String.valueOf(userId));
+        auditLogRequest.setAction("Deposit");
+        auditLogRequest.setMetaDataRequest(requestMetaData);
+        auditLogService.submitAuditLog(auditLogRequest);
+//        auditLogService.submitAuditLog("DEPOSIT", String.valueOf(userId),  "82.132.232.201", "HP laptop", "Aylesbury, UK");
 
             return new ApiResponse(false,
                     " Your account has been successfully credited",
@@ -55,6 +69,19 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public ApiResponse cashWithdrawal(Long userId, TransactionRequest request) throws CustomerNotFoundException, InvalidAmountException {
+
+        MetaDataRequest requestMetaData = new MetaDataRequest();
+        requestMetaData.setIp("193.186.4.64");
+        requestMetaData.setDevice("HP Laptop");
+        requestMetaData.setLocation("Aylesbury");
+
+        AuditLogRequest auditLogRequest = new AuditLogRequest();
+        auditLogRequest.setUserId(String.valueOf(userId));
+        auditLogRequest.setAction("Deposit");
+        auditLogRequest.setMetaDataRequest(requestMetaData);
+        auditLogService.submitAuditLog(auditLogRequest);
+//        auditLogService.submitAuditLog("WITHDRAWAL", String.valueOf(userId),  "82.132.232.201", "HP laptop", "Aylesbury, UK");
+
         return new ApiResponse(false, "Your account has been debited successfully", convertTransactionToResponse(withdrawal(userId, request)));
     }
 
@@ -64,6 +91,7 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction senderResponse = withdrawal(senderAcct, request);
         senderResponse.setTransactionType("Money-out");
         deposit(recipient, request);
+
         return new ApiResponse(false,
                 " Your have successfully transferred " + senderResponse.getAmount() + " to " + recipient,
                 convertTransactionToResponse(senderResponse));
